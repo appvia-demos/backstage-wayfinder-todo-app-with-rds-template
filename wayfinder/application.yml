@@ -1,0 +1,9 @@
+---
+apiVersion: app.appvia.io/v2beta1
+kind: Application
+metadata:
+  name: ${{ values.name }}
+spec:
+  cloud: ${{ values.cloud }}
+  description: Node.js + MySQL AWS RDS Application
+  name: ${{ values.name }}

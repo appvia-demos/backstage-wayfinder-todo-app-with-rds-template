@@ -1,0 +1,49 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.name }}-app
+  # title: Wayfinder Application
+  description: Application created from the backstage software template
+  labels: {}
+  annotations:
+    backstage.io/source-location: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}
+    github.com/project-slug: ${{values.repo.owner + "/" + values.repo.repo}}
+    wayfinder/workspace: ${{ values.workspaceKey }}    
+    wayfinder/app-name: ${{ values.name }}
+    wayfinder/app-component-name: ${{ values.name }}-app
+  tags:
+    - wayfinder
+  links:
+    - url: https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}
+      title: GitHub Repository
+      type: Code
+spec:
+  type: service
+  owner: ${{ values.owner }}
+  lifecycle: experimental
+  dependsOn:
+    - resource:default/${{ values.name }}-mysql
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ${{ values.name }}-mysql
+  # title: Wayfinder Application DB
+  description: AWS RDS MySQL Database used by the Wayfinder Application
+  labels: {}
+  annotations:
+    backstage.io/source-location: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}
+    github.com/project-slug: ${{values.repo.owner + "/" + values.repo.repo}}
+    wayfinder/workspace: ${{ values.workspaceKey }}
+    wayfinder/app-name: ${{ values.name }}
+    wayfinder/app-component-name: ${{ values.name }}-mysql
+  tags:
+    - wayfinder
+  links:
+    - url: https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}
+      title: GitHub Repository
+      type: Code
+spec:
+  type: database
+  owner: ${{ values.owner }}
+  lifecycle: experimental
