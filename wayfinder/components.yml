@@ -30,19 +30,19 @@ spec:
       - env:
           - name: MYSQL_HOST
             fromCloudResourceOutput:
-              componentName: mysql
+              componentName: mysql-${{ values.name }}
               output: DATABASE_HOST
           - name: MYSQL_USER
             fromCloudResourceOutput:
-              componentName: mysql
+              componentName: mysql-${{ values.name }}
               output: DATABASE_USER
           - name: MYSQL_PASSWORD
             fromCloudResourceOutput:
-              componentName: mysql
+              componentName: mysql-${{ values.name }}
               output: DATABASE_PASSWORD
           - name: MYSQL_DB
             fromCloudResourceOutput:
-              componentName: mysql
+              componentName: mysql-${{ values.name }}
               output: DATABASE_NAME
         image: quay.io/appvia/todo-app:latest
         name: app
