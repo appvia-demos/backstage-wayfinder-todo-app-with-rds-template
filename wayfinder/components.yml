@@ -9,8 +9,8 @@ spec:
     plan: appvia-rds-mysql
     planVersion: 1.0.0
     variables:
-      # db_name below will be prefixed with the app environment name 
-      # when component gets deployed as database names must be unique 
+      # db_name below will be prefixed with the app environment name
+      # when component gets deployed as database names must be unique
       # within the same AWS account. See the referencced CR plan for more info.
       db_name: todos
       allocated_storage: ${{ values.database_allocated_storage }}
