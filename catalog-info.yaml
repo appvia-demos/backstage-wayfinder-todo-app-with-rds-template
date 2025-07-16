@@ -9,7 +9,7 @@ metadata:
     backstage.io/source-location: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}
     github.com/project-slug: ${{values.repo.owner + "/" + values.repo.repo}}
     sonarqube.org/project-key: ${{values.repo.owner + "_" + values.repo.repo}}
-    backstage.io/techdocs-ref: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}/tree/${{values.repoBranch | default('main')}}
+    backstage.io/techdocs-ref: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}/tree/main
     jfrog-artifactory/image-name: docker-trial/${{ values.name }}
     wayfinder/workspace: ${{ values.workspaceKey }}    
     wayfinder/app-name: ${{ values.name }}
@@ -59,7 +59,7 @@ metadata:
     backstage.io/source-location: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}
     github.com/project-slug: ${{values.repo.owner + "/" + values.repo.repo}}
     sonarqube.org/project-key: ${{values.repo.owner + "_" + values.repo.repo}}
-    backstage.io/techdocs-ref: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}/tree/${{values.repoBranch | default('main')}}
+    backstage.io/techdocs-ref: url:https://${{values.repo.host + "/" + values.repo.owner + "/" + values.repo.repo}}/tree/main
     wayfinder/workspace: ${{ values.workspaceKey }}
     wayfinder/app-name: ${{ values.name }}
     wayfinder/app-component-name: ${{ values.name }}-mysql
