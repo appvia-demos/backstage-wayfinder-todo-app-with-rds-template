@@ -44,7 +44,7 @@ spec:
             fromCloudResourceOutput:
               componentName: mysql-${{ values.name }}
               output: DATABASE_NAME
-        image: quay.io/appvia/todo-app:latest
+        image: trialm6kl97.jfrog.io/docker-trial/${{ values.name }}:latest
         name: app
         ports:
           - containerPort: 3000
