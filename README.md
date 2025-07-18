@@ -19,14 +19,23 @@ Ensure [MySQL RDS cloud resource plan](./mysql-rds-cloud-resource-plan.yaml) is 
 
 ## 🔧 Required GitHub Secrets
 
-When projects are created from this template, the following GitHub repository secrets need to be configured for the CI/CD pipeline to work properly:
+When projects are created from this template, configure the following GitHub repository secrets for the CI/CD pipeline:
 
-- `ARTIFACTORY_URL`: `https://trialm6kl97.jfrog.io`
+### JFrog Artifactory Secrets (Required)
+- `ARTIFACTORY_URL`: JFrog Artifactory hostname (e.g., `trialm6kl97.jfrog.io`)
+- `ARTIFACTORY_USERNAME`: Your JFrog username
 - `ARTIFACTORY_ACCESS_TOKEN`: Your JFrog Artifactory access token
+- `ARTIFACTORY_DOCKER_REPO`: Docker repository name (e.g., `docker-trial`)
 
-These secrets are used to push Docker images to JFrog Artifactory and enable the JFrog Artifactory plugin integration in Backstage.
+### SonarQube Secrets (Optional)
+- `SONAR_TOKEN`: SonarQube authentication token
+- `SONAR_HOST_URL`: SonarQube server URL
 
-**Note**: Docker images can be pulled from JFrog Artifactory without authentication since anonymous access is enabled.
+For detailed setup instructions, see:
+- [Artifactory Setup Guide](docs/artifactory-setup.md)
+- [SonarQube Setup Guide](docs/sonarqube-setup.md)
+
+**Note**: The `GITHUB_TOKEN` is automatically provided by GitHub Actions.
 
 ## Usage
 

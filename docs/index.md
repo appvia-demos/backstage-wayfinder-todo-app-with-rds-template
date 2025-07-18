@@ -4,28 +4,45 @@ ${{ values.description }}
 
 ## Overview
 
-A simple todo application demonstrating Backstage integrations with AWS RDS cloud resource. This template uses AWS RDS for the database instead of a containerized MySQL instance.
+A production-ready todo application demonstrating Backstage integrations with AWS RDS MySQL. This template showcases cloud-native architecture using:
 
-## Features
+- **AWS RDS MySQL** for managed database persistence
+- **RESTful API** with OpenAPI documentation
+- **JFrog Artifactory** for Docker image publishing
+- **GitHub Actions** for CI/CD automation
+- **SonarQube** integration for code quality
+- **Wayfinder** for cloud resource management
 
-- Add item to list
-- Mark item as done
-- Delete item from list
-- AWS RDS MySQL integration
+## Architecture
 
-## Pre-requisites
+This application differs from the basic template by using AWS RDS instead of containerized MySQL:
 
-Ensure [MySQL RDS cloud resource plan](../mysql-rds-cloud-resource-plan.yaml) is applied in Wayfinder.
+- **Frontend**: Static HTML/JS served from the app container
+- **Backend**: Node.js REST API with automatic database schema management
+- **Database**: AWS RDS MySQL (managed by Wayfinder)
+- **CI/CD**: GitHub Actions workflow for testing and publishing
 
-## Quick Start
+## Prerequisites
 
-```bash
-docker compose up --build --detach
-```
+Before deploying this application:
 
-Visit http://localhost:3000
+1. **Wayfinder Setup**: Ensure the [MySQL RDS cloud resource plan](../mysql-rds-cloud-resource-plan.yaml) is applied in your Wayfinder workspace
+2. **GitHub Secrets**: Configure secrets for JFrog Artifactory (see [Artifactory Setup](artifactory-setup.md))
+3. **Local Development**: Docker and Docker Compose installed
 
-## Learn More
+## Documentation
 
-- [Development Guide](development.md)
-- [RDS Integration](rds-integration.md)
+### Getting Started
+- [Development Guide](development.md) - Local development, testing, and debugging
+- [API Documentation](../app/openapi.yaml) - REST API endpoints and OpenAPI specification
+
+### Integration Guides
+- [RDS Integration](rds-integration.md) - AWS RDS configuration and cloud resource management
+- [Artifactory Setup](artifactory-setup.md) - Docker registry configuration and CI/CD integration
+- [SonarQube Setup](sonarqube-setup.md) - Code quality analysis configuration
+
+### Deployment
+Once your repository is created from this template:
+1. Configure GitHub secrets as documented
+2. Push to the main branch to trigger CI/CD
+3. Deploy through Wayfinder using the generated application manifests
