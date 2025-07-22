@@ -15,7 +15,6 @@ Ensure [MySQL RDS cloud resource plan](./mysql-rds-cloud-resource-plan.yaml) is 
 ## Installation
 
 1. Clone the repository: `git clone https://github.com/appvia/todo-app.git`
-2. Run docker compose up --build --detach
 
 ## 🔧 Required GitHub Secrets
 
