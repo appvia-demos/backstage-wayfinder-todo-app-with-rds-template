@@ -30,7 +30,7 @@ jobs:
         run: yarn test --coverage --watchAll=false
 
       - name: Build and push Docker image
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository != 'appvia-demos/backstage-wayfinder-todo-app-with-rds-template'
+        if: github.repository != 'appvia-demos/backstage-wayfinder-todo-app-with-rds-template'
         run: |
           # Extract image name from GitHub repository
           IMAGE_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
