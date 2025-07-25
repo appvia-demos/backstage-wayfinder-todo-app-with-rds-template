@@ -31,21 +31,26 @@ jobs:
 
       - name: Build and push Docker image
         if: github.repository != 'appvia-demos/backstage-wayfinder-todo-app-with-rds-template'
+        env:
+          ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          ARTIFACTORY_DOCKER_REGISTRY: ${{ secrets.ARTIFACTORY_DOCKER_REGISTRY }}
         run: |
           # Extract image name from GitHub repository
           IMAGE_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
           
           # Login to JFrog Artifactory
-          ARTIFACTORY_HOST=$(echo "${{ secrets.ARTIFACTORY_URL }}" | sed 's|https://||')
-          echo "${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}" | docker login ${ARTIFACTORY_HOST} -u ${{ secrets.ARTIFACTORY_USERNAME }} --password-stdin
+          ARTIFACTORY_HOST=$(echo "${ARTIFACTORY_URL}" | sed 's|https://||')
+          echo "${ARTIFACTORY_PASSWORD}" | docker login ${ARTIFACTORY_HOST} -u ${ARTIFACTORY_USERNAME} --password-stdin
           
           # Build and tag the image
-          docker build -t ${ARTIFACTORY_HOST}/${{ secrets.ARTIFACTORY_DOCKER_REPO }}/${IMAGE_NAME}:latest .
-          docker build -t ${ARTIFACTORY_HOST}/${{ secrets.ARTIFACTORY_DOCKER_REPO }}/${IMAGE_NAME}:${{ github.sha }} .
+          docker build -t ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REGISTRY}/${IMAGE_NAME}:latest .
+          docker build -t ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REGISTRY}/${IMAGE_NAME}:${{ github.sha }} .
           
           # Push both tags
-          docker push ${ARTIFACTORY_HOST}/${{ secrets.ARTIFACTORY_DOCKER_REPO }}/${IMAGE_NAME}:latest
-          docker push ${ARTIFACTORY_HOST}/${{ secrets.ARTIFACTORY_DOCKER_REPO }}/${IMAGE_NAME}:${{ github.sha }}
+          docker push ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REGISTRY}/${IMAGE_NAME}:latest
+          docker push ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REGISTRY}/${IMAGE_NAME}:${{ github.sha }}
 
       - name: Start containers
         run: docker compose up --build --detach
