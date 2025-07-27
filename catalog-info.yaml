@@ -14,6 +14,8 @@ metadata:
     wayfinder/workspace: ${{ values.workspaceKey }}    
     wayfinder/app-name: ${{ values.name }}
     wayfinder/app-component-name: ${{ values.name }}-app
+    # Grafana dashboard annotation - will show dashboards with the app's tag
+    grafana/dashboard-selector: "tags @> '${{ values.name }}'"
   tags:
     - wayfinder
   links:
@@ -41,6 +43,12 @@ metadata:
       title: JFrog Artifactory
       type: Docker Registry
       icon: artifactory
+    {%- if values.grafanaDashboardUrl %}
+    - url: ${{ values.grafanaDashboardUrl }}
+      title: Grafana Dashboard
+      type: Monitoring
+      icon: dashboard
+    {%- endif %}
 spec:
   type: service
   owner: ${{ values.owner }}
