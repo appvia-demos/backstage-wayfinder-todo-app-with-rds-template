@@ -3,6 +3,8 @@ name: Create and test a Docker image
 on:
   pull_request:
     branches: ['main']
+  push:
+    branches: ['main']
 
 jobs:
   build-and-test-image:
@@ -13,14 +15,62 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Disable shallow clone for SonarCloud analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install app dependencies
+        working-directory: ./app
+        run: yarn install
+
+      - name: Run app tests with coverage
+        working-directory: ./app
+        run: yarn test --coverage --watchAll=false
+
+      - name: Build and push Docker image
+        if: github.repository != 'appvia-demos/backstage-wayfinder-todo-app-with-rds-template'
+        env:
+          ARTIFACTORY_URL: ${{ '${{ secrets.ARTIFACTORY_URL }}' }}
+          ARTIFACTORY_USERNAME: ${{ '${{ secrets.ARTIFACTORY_USERNAME }}' }}
+          ARTIFACTORY_ACCESS_TOKEN: ${{ '${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}' }}
+          ARTIFACTORY_DOCKER_REPO: ${{ '${{ secrets.ARTIFACTORY_DOCKER_REPO }}' }}
+        run: |
+          # Extract image name from GitHub repository
+          IMAGE_NAME=$(echo "${{ '${{ github.repository }}' }}" | cut -d'/' -f2)
+          
+          # Login to JFrog Artifactory
+          ARTIFACTORY_HOST=$(echo "${ARTIFACTORY_URL}" | sed 's|https://||')
+          echo "${ARTIFACTORY_ACCESS_TOKEN}" | docker login ${ARTIFACTORY_HOST} -u ${ARTIFACTORY_USERNAME} --password-stdin
+          
+          # Build and tag the image
+          docker build -t ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REPO}/${IMAGE_NAME}:latest .
+          docker build -t ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REPO}/${IMAGE_NAME}:${{ '${{ github.sha }}' }} .
+          
+          # Push both tags
+          docker push ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REPO}/${IMAGE_NAME}:latest
+          docker push ${ARTIFACTORY_HOST}/${ARTIFACTORY_DOCKER_REPO}/${IMAGE_NAME}:${{ '${{ github.sha }}' }}
 
       - name: Start containers
         run: docker compose up --build --detach
 
-      - name: Run test
+      - name: Run integration test
         run: |
           docker ps
           for i in {1..10}; do curl -m 10 -s localhost:3000 | grep 'Appvia Todo List' && echo "[Attempt $i] Endpoint returned expected response." && exit 0 || echo "[Attempt $i] Endpoint not returning expected response, retrying in 5 seconds.." && sleep 5; done; exit 1
 
       - name: Stop containers
         run: docker compose down
+
+      - name: SonarQube Scan
+        if: env.SONAR_TOKEN != '' && github.repository != 'appvia-demos/backstage-wayfinder-todo-app-with-rds-template'
+        uses: SonarSource/sonarqube-scan-action@v3
+        with:
+          projectBaseDir: .
+        env:
+          GITHUB_TOKEN: ${{ '${{ secrets.GITHUB_TOKEN }}' }}
+          SONAR_TOKEN: ${{ '${{ secrets.SONAR_TOKEN }}' }}
+          SONAR_HOST_URL: ${{ '${{ secrets.SONAR_HOST_URL }}' }}
